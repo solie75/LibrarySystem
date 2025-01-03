@@ -75,7 +75,7 @@ public:
         }
     }
 
-    void SearchByTitle(string _title)
+    string SearchByTitle(string _title)
     {
         for (Book book : books)
         {
@@ -84,13 +84,14 @@ public:
                 cout << "\n";
                 cout << "the book is available" << "\n";
                 PrintBookData(book);
-                return;
+                return _title;
             }
         }
         cout << "the book is not available" << "\n";
+        return "";
     }
 
-    void SearchByAuthor(string _author)
+    string SearchByAuthor(string _author)
     {
         for (Book book : books)
         {
@@ -99,14 +100,16 @@ public:
                 cout << "\n";
                 cout << "the book is available" << "\n";
                 PrintBookData(book);
-                return;
+
+                return book.GetTitle();
             }
         }
 
         cout << "the book is not available" << "\n";
+        return "";
     }
 
-    void SearchBook()
+    string SearchBook()
     {
         while (true)
         {
@@ -120,8 +123,7 @@ public:
                 cout << "Enter the book title" << "\n";
                 cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 getline(cin, title);
-                SearchByTitle(title);
-                return;
+                return SearchByTitle(title);
             }
             else if (inputDial == 2)
             {
@@ -130,16 +132,13 @@ public:
                 cout << "Enter the book author" << "\n";
                 cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 getline(cin, author);
-                SearchByAuthor(author);
-                return;
+                return SearchByAuthor(author);
             }
             else
             {
                 cout << "This is not a valid selection. Please choose again.";
             }
         }
-
-        
     }
 };
 
@@ -318,8 +317,13 @@ int main()
             bookManager.DisplayAllBooks();
             break;
         case 2:
-            bookManager.SearchBook();
-            break;
+            {
+                string title = bookManager.SearchBook();
+                if (title != "")
+                {
+                    borrowManager.DisplayStock(title);
+                }
+            }            break;
         case 3:
             DonateBook(bookManager, borrowManager);
             break;
